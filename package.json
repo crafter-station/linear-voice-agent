@@ -1,24 +1,43 @@
 {
-  "name": "linear-voice-agent",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.3"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
-  }
+	"name": "linear-voice-agent",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"next": "15.3.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@tailwindcss/postcss": "^4",
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.0",
+		"tailwindcss": "^4",
+		"typescript": "^5"
+	},
+	"lint-staged": {
+		"*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
+			"biome check --files-ignore-unknown=true",
+			"biome check --write --no-errors-on-unmatched",
+			"biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
+			"biome check --write --unsafe --no-errors-on-unmatched",
+			"biome format --write --no-errors-on-unmatched",
+			"biome lint --write --no-errors-on-unmatched"
+		],
+		"*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
+	},
+	"packageManager": "bun@1.2.2",
+	"engines": {
+		"node": ">=20"
+	}
 }
