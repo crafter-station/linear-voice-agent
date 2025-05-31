@@ -1,29 +1,13 @@
 import { UserButton } from "@clerk/nextjs";
-import { TeamList } from "./components/team-list";
-import { getLinearData } from "./actions";
+import AudioReactiveBall from "./components/audio-reactive-ball";
+import Link from "next/link";
+import { Users, Mic } from "lucide-react";
 
-interface Team {
-	id: string;
-	name: string;
-	description: string;
-	createdAt: string;
-}
-
-export default async function Home() {
-	let teams: Team[] = [];
-	let error: string | null = null;
-
-	try {
-		const data = await getLinearData();
-		teams = data.teams;
-	} catch (err) {
-		error = err instanceof Error ? err.message : "Failed to load teams";
-	}
-
+export default function Home() {
 	return (
-		<div className="min-h-[100dvh] bg-background flex flex-col">
+		<div className="min-h-[100dvh] bg-background relative">
 			{/* Header */}
-			<header className="border-b border-border/60">
+			<header className="absolute top-0 left-0 right-0 z-10 border-b border-border/60 bg-background/80 backdrop-blur-sm">
 				<div className="flex items-center justify-between px-6 py-3">
 					<div className="flex items-center gap-4">
 						<div className="w-6 h-6 bg-foreground rounded flex items-center justify-center">
@@ -36,54 +20,55 @@ export default async function Home() {
 						</span>
 					</div>
 
-					<UserButton />
+					<div className="flex items-center gap-3">
+						<Link
+							href="/team"
+							className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
+						>
+							<Users className="h-4 w-4" />
+							Teams
+						</Link>
+						<UserButton />
+					</div>
 				</div>
 			</header>
 
-			{/* Main Content */}
-			<main className="flex flex-1 flex-col max-w-4xl mx-auto w-full px-6 py-8">
-				<div className="mb-8">
-					<h1 className="text-2xl font-medium text-foreground mb-2">
-						Your Teams
-					</h1>
-					<p className="text-sm text-muted-foreground">
-						Manage your Linear teams and view recent issues
-					</p>
-				</div>
+			{/* Audio Reactive Ball */}
+			<AudioReactiveBall />
 
-				{error ? (
-					<div className="flex-1 flex items-center justify-center">
-						<div className="text-center space-y-4">
-							<h2 className="text-lg font-medium text-foreground">
-								Unable to load teams
-							</h2>
-							<p className="text-sm text-muted-foreground max-w-md">
-								{error}. Make sure you've connected your Linear account.
-							</p>
-							<button
-								type="button"
-								className="bg-foreground text-background hover:bg-foreground/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-								onClick={() => window.location.reload()}
-							>
-								Try again
-							</button>
-						</div>
+			{/* Overlay Content */}
+			<div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+				<div className="text-center space-y-6">
+					<div className="space-y-2">
+						<h1 className="text-3xl font-medium text-foreground/90">
+							Voice-powered Linear workflow
+						</h1>
+						<p className="text-muted-foreground text-lg max-w-lg mx-auto">
+							Speak naturally to create issues, update statuses, and manage your
+							projects
+						</p>
 					</div>
-				) : teams.length > 0 ? (
-					<TeamList teams={teams} />
-				) : (
-					<div className="flex-1 flex items-center justify-center">
-						<div className="text-center space-y-4">
-							<h2 className="text-lg font-medium text-foreground">
-								No teams found
-							</h2>
-							<p className="text-sm text-muted-foreground">
-								You don't have access to any Linear teams yet.
-							</p>
-						</div>
+
+					<div className="pointer-events-auto">
+						<button
+							type="button"
+							className="bg-muted/20 backdrop-blur-sm text-foreground hover:bg-muted/30 border border-border/40 px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 mx-auto"
+						>
+							<Mic className="h-5 w-5" />
+							Start listening
+						</button>
 					</div>
-				)}
-			</main>
+
+					<div className="text-muted-foreground/70 text-xs pointer-events-auto">
+						<Link
+							href="/team"
+							className="hover:text-muted-foreground transition-colors underline"
+						>
+							Or manage your teams manually
+						</Link>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
