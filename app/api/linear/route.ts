@@ -15,6 +15,7 @@ export async function POST(request: Request) {
 
 		const userId = user_id;
 		const parsedTeams = teams ? JSON.parse(teams) : undefined;
+		console.log({ parsedTeams });
 
 		if (!prompt) {
 			return Response.json({ error: "No prompt provided" }, { status: 400 });
