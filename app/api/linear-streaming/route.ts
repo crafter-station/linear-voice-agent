@@ -1,7 +1,11 @@
-import { createClerkClient, type OauthAccessToken } from "@clerk/nextjs/server";
+import {
+	auth,
+	createClerkClient,
+	type OauthAccessToken,
+} from "@clerk/nextjs/server";
 import { ClerkAPIResponseError } from "@clerk/shared";
 
-import { generateLinearAI } from "@/tools";
+import { streamLinearAI } from "@/tools";
 
 export async function POST(request: Request) {
 	try {
@@ -51,12 +55,12 @@ export async function POST(request: Request) {
 
 		console.log(token);
 
-		const result = await generateLinearAI({
+		const result = streamLinearAI({
 			messages: [{ role: "user", content: prompt, id: "1" }],
 			oauthToken: token,
 		});
 
-		return new Response(result.text);
+		return result.toDataStreamResponse();
 	} catch (error) {
 		console.error(error);
 		return Response.json(
