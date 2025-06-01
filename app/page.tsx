@@ -12,22 +12,27 @@ export default function Home() {
 					<div className="flex items-center gap-4">
 						<div className="w-6 h-6 bg-foreground rounded flex items-center justify-center">
 							<span className="text-background font-medium text-[10px]">
-								LV
+								VA
 							</span>
 						</div>
 						<span className="text-foreground font-medium text-sm">
-							Linear Voice Assistant
+							Voice Assistant
 						</span>
+						<Link
+							href="/team"
+							className="text-muted-foreground hover:text-foreground transition-colors text-sm ml-4"
+						>
+							Teams
+						</Link>
+						<Link
+							href="/elevenlabs"
+							className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+						>
+							ElevenLabs
+						</Link>
 					</div>
 
 					<div className="flex items-center gap-3">
-						<Link
-							href="/team"
-							className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
-						>
-							<Users className="h-4 w-4" />
-							Teams
-						</Link>
 						<UserButton />
 					</div>
 				</div>
