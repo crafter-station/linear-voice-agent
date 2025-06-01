@@ -9,14 +9,13 @@ import { streamLinearAI } from "@/tools";
 
 export async function POST(request: Request) {
 	try {
-		const { prompt } = await request.json();
+		const { prompt, userId } = await request.json();
 
 		if (!prompt) {
 			return Response.json({ error: "No prompt provided" }, { status: 400 });
 		}
 
-		const session = await auth();
-		if (!session.userId) {
+		if (!userId) {
 			return Response.json(
 				{ error: "Unauthorized: No user ID found" },
 				{ status: 401 },
@@ -30,10 +29,7 @@ export async function POST(request: Request) {
 		let oauthTokens: OauthAccessToken[] | undefined;
 		try {
 			const oauthTokensResponse =
-				await clerkClient.users.getUserOauthAccessToken(
-					session.userId,
-					"linear",
-				);
+				await clerkClient.users.getUserOauthAccessToken(userId, "linear");
 			oauthTokens = oauthTokensResponse.data;
 		} catch (error) {
 			if (error instanceof ClerkAPIResponseError) {
