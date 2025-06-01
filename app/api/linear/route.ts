@@ -7,12 +7,14 @@ export const maxDuration = 90;
 
 export async function POST(request: Request) {
 	try {
-		const { prompt, user_id } = await request.json();
+		const { prompt, user_id, teams } = await request.json();
 
-		console.log(prompt);
-		console.log(user_id);
+		console.log({ prompt });
+		console.log({ user_id });
+		console.log({ teams });
 
 		const userId = user_id;
+		const parsedTeams = teams ? JSON.parse(teams) : undefined;
 
 		if (!prompt) {
 			return Response.json({ error: "No prompt provided" }, { status: 400 });
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
 		const result = await runLinearAI({
 			oauthToken: token,
 			prompt,
+			teams: parsedTeams,
 		});
 
 		console.log(JSON.stringify(result, null, 2));

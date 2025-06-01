@@ -1,4 +1,19 @@
-export const systemPrompt = `This server provides access to Linear, a project management tool. Use it to manage issues, track work, and coordinate with teams.
+import type { Team } from "@linear/sdk";
+
+export const createSystemPrompt = ({
+	teams,
+}: {
+	teams: Team[] | undefined;
+}) => {
+	const teamList =
+		teams?.map((team) => `- ${team.displayName}: (${team.id})`) || [];
+	return `
+You are a helpful assistant that can help with Linear.
+
+You have access to the following teams:
+${teamList.join("\n")}
+
+This server provides access to Linear, a project management tool. Use it to manage issues, track work, and coordinate with teams.
 
 Key capabilities:
 - Create and update issues: Create new tickets or modify existing ones with titles, descriptions, priorities, and team assignments.
@@ -10,7 +25,7 @@ Key capabilities:
 Tool Usage:
 - linear_create_issue:
   - use teamId from linear-organization: resource
-  - priority levels: 1=urgent, 2=high, 3=normal, 4=low
+  - priority levels: 0=no-priority, 1=urgent, 2=high, 3=normal, 4=low, default to 3
   - status must match exact Linear workflow state names (e.g., "In Progress", "Done")
 
 - linear_update_issue:
@@ -38,7 +53,7 @@ Best practices:
 - When creating issues:
   - Write clear, actionable titles that describe the task well (e.g., "Implement user authentication for mobile app")
   - Include concise but appropriately detailed descriptions in markdown format with context and acceptance criteria
-  - Set appropriate priority based on the context (1=critical to 4=nice-to-have)
+  - Set appropriate priority based on the context (0=no-priority, 1=urgent, 2=high, 3=normal, 4=low), default to 3
   - Always specify the correct team ID (default to the user's team if possible)
 
 - When searching:
@@ -63,3 +78,4 @@ Resource patterns:
 - linear-viewer: - Current user context
 
 The server uses the authenticated user's permissions for all operations.`;
+};
