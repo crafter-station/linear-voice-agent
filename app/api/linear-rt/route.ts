@@ -1,7 +1,7 @@
 import { createClerkClient, type OauthAccessToken } from "@clerk/nextjs/server";
 import { ClerkAPIResponseError } from "@clerk/shared";
 
-import { runLinearAI, runLinearAIStream } from "@/tools";
+import { runLinearAIStream } from "@/tools";
 
 export const maxDuration = 90;
 

@@ -1,13 +1,4 @@
-import { z } from "zod";
-import {
-	streamText,
-	tool,
-	type Message,
-	generateText,
-	generateObject,
-	StreamTextResult,
-	GenerateTextResult,
-} from "ai";
+import { streamText, type Message, generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { LinearClient } from "@linear/sdk";
 
@@ -19,6 +10,12 @@ import { createGetIssueTool } from "./get-issue";
 import { createListIssueStatusesTool } from "./list-issue-statuses";
 import { createGetUserTool } from "./get-user";
 import { systemPrompt } from "./system-prompt";
+
+type LinearOptions = {
+	oauthToken: string;
+	prompt?: string;
+	messages?: Message[];
+};
 
 const createTools = (linear: LinearClient) => ({
 	listUsers: createListUsersTool(linear),
@@ -32,18 +29,7 @@ const createTools = (linear: LinearClient) => ({
 	listIssueStatuses: createListIssueStatusesTool(linear),
 });
 
-export async function runLinearAI(
-	options: {
-		oauthToken: string;
-	} & (
-		| {
-				prompt: string;
-		  }
-		| {
-				messages: Message[];
-		  }
-	),
-) {
+export async function runLinearAI(options: LinearOptions) {
 	const linear = new LinearClient({
 		accessToken: options.oauthToken,
 	});
@@ -53,8 +39,8 @@ export async function runLinearAI(
 	const result = await generateText({
 		model: openai("gpt-4.1-nano"),
 		tools,
-		prompt: "prompt" in options ? options.prompt : undefined,
-		messages: "messages" in options ? options.messages : undefined,
+		prompt: options.prompt,
+		messages: options.messages,
 		maxSteps: 10,
 		system: systemPrompt,
 	});
@@ -62,18 +48,7 @@ export async function runLinearAI(
 	return result;
 }
 
-export async function runLinearAIStream(
-	options: {
-		oauthToken: string;
-	} & (
-		| {
-				prompt: string;
-		  }
-		| {
-				messages: Message[];
-		  }
-	),
-) {
+export async function runLinearAIStream(options: LinearOptions) {
 	const linear = new LinearClient({
 		accessToken: options.oauthToken,
 	});
@@ -83,8 +58,8 @@ export async function runLinearAIStream(
 	return streamText({
 		model: openai("gpt-4.1-nano"),
 		tools,
-		messages: "messages" in options ? options.messages : undefined,
-		prompt: "prompt" in options ? options.prompt : undefined,
+		messages: options.messages,
+		prompt: options.prompt,
 		maxSteps: 10,
 		system: systemPrompt,
 	});
