@@ -3,12 +3,17 @@ import { ClerkAPIResponseError } from "@clerk/shared";
 
 import { generateLinearAI } from "@/tools";
 
+export const maxDuration = 90;
+export const runtime = "edge";
+
 export async function POST(request: Request) {
 	try {
-		const { prompt, userId } = await request.json();
+		const { prompt, user_id } = await request.json();
 
 		console.log(prompt);
-		console.log(userId);
+		console.log(user_id);
+
+		const userId = user_id;
 
 		if (!prompt) {
 			return Response.json({ error: "No prompt provided" }, { status: 400 });
