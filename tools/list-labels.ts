@@ -2,9 +2,9 @@ import type { LinearClient } from "@linear/sdk";
 import { tool } from "ai";
 import { z } from "zod";
 
-export const createListLabelsTool = (client: LinearClient) =>
+export const createListIssueLabelsTool = (client: LinearClient) =>
 	tool({
-		description: "List labels in the user's Linear workspace",
+		description: "List available issue labels in the user's Linear workspace",
 		parameters: z.object({}),
 		execute: async () => {
 			const labels = await client.issueLabels();

@@ -6,7 +6,10 @@ import { LinearClient } from "@linear/sdk";
 import { createListUsersTool } from "./list-users";
 import { createListIssuesTool } from "./list-issues";
 import { createCreateIssueTool } from "./create-issue";
-import { createListLabelsTool } from "./list-labels";
+import { createListIssueLabelsTool } from "./list-labels";
+import { createGetIssueTool } from "./get-issue";
+import { createListIssueStatusesTool } from "./list-issue-statuses";
+import { createGetUserTool } from "./get-user";
 
 export function streamLinearAI({
 	messages,
@@ -20,30 +23,14 @@ export function streamLinearAI({
 		model: openai("gpt-4.1-nano"),
 		tools: {
 			listUsers: createListUsersTool(linear),
-			listIssues: createListIssuesTool(linear),
-			createIssue: createCreateIssueTool(linear),
-			listLabels: createListLabelsTool(linear),
+			getUser: createGetUserTool(linear),
 
-			getIssue: tool({
-				description: "Get an issue",
-				parameters: z.object({
-					issueId: z.string().describe("The id of the issue to get"),
-				}),
-				execute: async ({ issueId }) => {
-					const issue = await linear.issue(issueId);
-					return `${issue.title} ${issue.description}`;
-				},
-			}),
-			listIssueStatuses: tool({
-				description: "List available issues statuses in a the current team",
-				parameters: z.object({}),
-				execute: async () => {
-					const statuses = await linear.projectStatuses();
-					return statuses.nodes
-						.map((status) => `${status.name} - ${status.id}`)
-						.join("\n");
-				},
-			}),
+			createIssue: createCreateIssueTool(linear),
+			listIssues: createListIssuesTool(linear),
+			getIssue: createGetIssueTool(linear),
+
+			listIssueLabels: createListIssueLabelsTool(linear),
+			listIssueStatuses: createListIssueStatusesTool(linear),
 		},
 		maxSteps: 10,
 		messages,
