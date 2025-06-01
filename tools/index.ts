@@ -5,6 +5,8 @@ import {
 	type Message,
 	generateText,
 	generateObject,
+	StreamTextResult,
+	GenerateTextResult,
 } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { LinearClient } from "@linear/sdk";
@@ -29,27 +31,7 @@ const createTools = (linear: LinearClient) => ({
 	listIssueStatuses: createListIssueStatusesTool(linear),
 });
 
-export function streamLinearAI({
-	messages,
-	oauthToken,
-}: { messages: Message[]; oauthToken: string }) {
-	const linear = new LinearClient({
-		accessToken: oauthToken,
-	});
-
-	const tools = createTools(linear);
-
-	const result = streamText({
-		model: openai("gpt-4.1-nano"),
-		tools,
-		maxSteps: 10,
-		messages,
-	});
-
-	return result;
-}
-
-export function generateLinearAI(
+export async function runLinearAI(
 	options: {
 		oauthToken: string;
 	} & (
@@ -67,7 +49,7 @@ export function generateLinearAI(
 
 	const tools = createTools(linear);
 
-	const result = generateText({
+	const result = await generateText({
 		model: openai("gpt-4.1-nano"),
 		tools,
 		prompt: "prompt" in options ? options.prompt : undefined,
@@ -76,4 +58,31 @@ export function generateLinearAI(
 	});
 
 	return result;
+}
+
+export async function runLinearAIStream(
+	options: {
+		oauthToken: string;
+	} & (
+		| {
+				prompt: string;
+		  }
+		| {
+				messages: Message[];
+		  }
+	),
+) {
+	const linear = new LinearClient({
+		accessToken: options.oauthToken,
+	});
+
+	const tools = createTools(linear);
+
+	return streamText({
+		model: openai("gpt-4.1-nano"),
+		tools,
+		messages: "messages" in options ? options.messages : undefined,
+		prompt: "prompt" in options ? options.prompt : undefined,
+		maxSteps: 10,
+	});
 }

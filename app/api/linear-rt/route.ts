@@ -1,7 +1,7 @@
 import { createClerkClient, type OauthAccessToken } from "@clerk/nextjs/server";
 import { ClerkAPIResponseError } from "@clerk/shared";
 
-import { runLinearAI } from "@/tools";
+import { runLinearAI, runLinearAIStream } from "@/tools";
 
 export const maxDuration = 90;
 
@@ -58,14 +58,14 @@ export async function POST(request: Request) {
 
 		console.log(token);
 
-		const result = await runLinearAI({
+		const result = await runLinearAIStream({
 			oauthToken: token,
 			prompt,
 		});
 
 		console.log(JSON.stringify(result, null, 2));
 
-		return new Response(result.text);
+		return result.toDataStreamResponse();
 	} catch (error) {
 		console.error(error);
 		return Response.json(
