@@ -43,6 +43,18 @@ export const createCreateIssueTool = (client: LinearClient) =>
 			labelIds,
 			dueDate,
 		}) => {
+			console.log({
+				title,
+				teamId,
+				description,
+				priority,
+				projectId,
+				stateId,
+				assigneeId,
+				labelIds,
+				dueDate,
+			});
+
 			const result = await client.createIssue({
 				title,
 				teamId,
@@ -55,15 +67,18 @@ export const createCreateIssueTool = (client: LinearClient) =>
 				dueDate,
 			});
 			if (!result.issueId) {
+				console.error("Issue not created", result);
 				return "Issue not created";
 			}
 
 			const issue = await result.issue;
 
 			if (!issue) {
+				console.error("Issue not created", result);
 				return "Issue not created";
 			}
 
+			console.log("Issue created", issue);
 			return `Issue created: ${issue.identifier}`;
 		},
 	});
