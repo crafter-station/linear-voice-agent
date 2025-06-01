@@ -3,6 +3,10 @@ import { TeamList } from "../components/team-list";
 import { getLinearData } from "../actions";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { ErrorRetryButton } from "./components/error-retry-button";
+
+// Force dynamic rendering since we use auth() which requires headers
+export const dynamic = "force-dynamic";
 
 interface Team {
 	id: string;
@@ -67,13 +71,7 @@ export default async function TeamPage() {
 							<p className="text-sm text-muted-foreground max-w-md">
 								{error}. Make sure you've connected your Linear account.
 							</p>
-							<button
-								type="button"
-								className="bg-foreground text-background hover:bg-foreground/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-								onClick={() => window.location.reload()}
-							>
-								Try again
-							</button>
+							<ErrorRetryButton />
 						</div>
 					</div>
 				) : teams.length > 0 ? (
