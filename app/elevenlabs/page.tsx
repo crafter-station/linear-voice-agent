@@ -4,7 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import { TTSSection } from "./components/tts-section";
 import { VoicesSection } from "./components/voices-section";
 import { AgentsSection } from "./components/agents-section";
+import { ErrorRetryButton } from "./components/error-retry-button";
 import { getVoices, getAgents } from "./actions";
+
+// Force dynamic rendering since we use auth() which requires headers
+export const dynamic = "force-dynamic";
 
 interface Voice {
 	voice_id: string;
@@ -90,13 +94,7 @@ export default async function ElevenLabsPage() {
 							<p className="text-sm text-muted-foreground max-w-md">
 								{error}. Make sure your ElevenLabs API key is configured.
 							</p>
-							<button
-								type="button"
-								className="bg-foreground text-background hover:bg-foreground/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-								onClick={() => window.location.reload()}
-							>
-								Try again
-							</button>
+							<ErrorRetryButton />
 						</div>
 					</div>
 				) : (
