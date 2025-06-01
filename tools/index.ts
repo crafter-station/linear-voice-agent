@@ -49,12 +49,20 @@ export function streamLinearAI({
 	return result;
 }
 
-export function generateLinearAI({
-	messages,
-	oauthToken,
-}: { messages: Message[]; oauthToken: string }) {
+export function generateLinearAI(
+	options: {
+		oauthToken: string;
+	} & (
+		| {
+				prompt: string;
+		  }
+		| {
+				messages: Message[];
+		  }
+	),
+) {
 	const linear = new LinearClient({
-		accessToken: oauthToken,
+		accessToken: options.oauthToken,
 	});
 
 	const tools = createTools(linear);
@@ -62,7 +70,9 @@ export function generateLinearAI({
 	const result = generateText({
 		model: openai("gpt-4.1-nano"),
 		tools,
-		messages,
+		prompt: "prompt" in options ? options.prompt : undefined,
+		messages: "messages" in options ? options.messages : undefined,
+		maxSteps: 10,
 	});
 
 	return result;

@@ -4,7 +4,6 @@ import { ClerkAPIResponseError } from "@clerk/shared";
 import { generateLinearAI } from "@/tools";
 
 export const maxDuration = 90;
-export const runtime = "edge";
 
 export async function POST(request: Request) {
 	try {
@@ -60,9 +59,11 @@ export async function POST(request: Request) {
 		console.log(token);
 
 		const result = await generateLinearAI({
-			messages: [{ role: "user", content: prompt, id: "1" }],
 			oauthToken: token,
+			prompt,
 		});
+
+		console.log(JSON.stringify(result, null, 2));
 
 		return new Response(result.text);
 	} catch (error) {
