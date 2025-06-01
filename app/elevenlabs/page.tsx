@@ -1,6 +1,7 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { TTSSection } from "./components/tts-section";
 import { VoicesSection } from "./components/voices-section";
 import { AgentsSection } from "./components/agents-section";
@@ -83,6 +84,26 @@ export default async function ElevenLabsPage() {
 						Create lifelike speech, build conversational agents, and generate
 						custom voices
 					</p>
+				</div>
+
+				{/* Quick Access to Voice Agent */}
+				<div className="mb-8 p-6 border border-border/60 rounded-lg bg-muted/20">
+					<div className="flex items-center justify-between">
+						<div className="space-y-1">
+							<h3 className="text-lg font-medium text-foreground">
+								Linear Voice Agent
+							</h3>
+							<p className="text-sm text-muted-foreground">
+								Interactive conversational AI with real-time audio visualization
+							</p>
+						</div>
+						<Link href="/elevenlabs/agent">
+							<Button className="flex items-center gap-2">
+								<MessageCircle className="h-4 w-4" />
+								Start Conversation
+							</Button>
+						</Link>
+					</div>
 				</div>
 
 				{error ? (
