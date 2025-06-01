@@ -5,7 +5,7 @@ import { z } from "zod";
 export const createListIssueLabelsTool = (client: LinearClient) =>
 	tool({
 		description:
-			"List available issue labels in the user's Linear workspace or for a specific team",
+			"List available issue labels in the user's Linear workspace or for a specific team. Returns JSON format with clear name and id separation.",
 		parameters: z.object({
 			teamId: z
 				.string()
@@ -19,15 +19,27 @@ export const createListIssueLabelsTool = (client: LinearClient) =>
 				// Get team-specific labels
 				const team = await client.team(teamId);
 				const labels = await team.labels();
-				return labels.nodes
-					.map((label) => `${label.name} - ${label.id}`)
-					.join("\n");
+				return JSON.stringify(
+					labels.nodes.map((label) => ({
+						name: label.name,
+						id: label.id,
+						color: label.color,
+					})),
+					null,
+					2,
+				);
 			}
 
 			// Get all workspace labels
 			const labels = await client.issueLabels();
-			return labels.nodes
-				.map((label) => `${label.name} - ${label.id}`)
-				.join("\n");
+			return JSON.stringify(
+				labels.nodes.map((label) => ({
+					name: label.name,
+					id: label.id,
+					color: label.color,
+				})),
+				null,
+				2,
+			);
 		},
 	});
