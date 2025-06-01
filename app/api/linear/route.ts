@@ -7,6 +7,9 @@ export async function POST(request: Request) {
 	try {
 		const { prompt, userId } = await request.json();
 
+		console.log(prompt);
+		console.log(userId);
+
 		if (!prompt) {
 			return Response.json({ error: "No prompt provided" }, { status: 400 });
 		}
