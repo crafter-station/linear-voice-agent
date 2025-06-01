@@ -27,6 +27,7 @@ Tool Usage:
   - use teamId from linear-organization: resource
   - priority levels: 0=no-priority, 1=urgent, 2=high, 3=normal, 4=low, default to 3
   - status must match exact Linear workflow state names (e.g., "In Progress", "Done")
+  - IMPORTANT: Always get team-specific labels using listIssueLabels with teamId before creating issues
 
 - linear_update_issue:
   - get issue IDs from search_issues or linear-issue:/// resources
@@ -55,6 +56,7 @@ Best practices:
   - Include concise but appropriately detailed descriptions in markdown format with context and acceptance criteria
   - Set appropriate priority based on the context (0=no-priority, 1=urgent, 2=high, 3=normal, 4=low), default to 3
   - Always specify the correct team ID (default to the user's team if possible)
+  - ALWAYS fetch team-specific labels first using listIssueLabels with the teamId before adding labelIds to avoid errors
 
 - When searching:
   - Use specific, targeted queries for better results (e.g., "auth mobile app" rather than just "auth")

@@ -55,30 +55,36 @@ export const createCreateIssueTool = (client: LinearClient) =>
 				dueDate,
 			});
 
-			const result = await client.createIssue({
-				title,
-				teamId,
-				description,
-				priority,
-				projectId,
-				stateId,
-				assigneeId,
-				labelIds,
-				dueDate,
-			});
-			if (!result.issueId) {
-				console.error("Issue not created", result);
-				return "Issue not created";
+			try {
+				const result = await client.createIssue({
+					title,
+					teamId,
+					description,
+					priority,
+					projectId,
+					stateId,
+					assigneeId,
+					labelIds,
+					dueDate,
+				});
+
+				if (!result.issueId) {
+					console.error("Issue not created", result);
+					return "Issue not created";
+				}
+
+				const issue = await result.issue;
+
+				if (!issue) {
+					console.error("Issue not created", result);
+					return "Issue not created";
+				}
+
+				console.log("Issue created", issue);
+				return `Issue created: ${issue.identifier}`;
+			} catch (error) {
+				console.error("Error creating issue:", error);
+				return `Error creating issue: ${error instanceof Error ? error.message : String(error)}`;
 			}
-
-			const issue = await result.issue;
-
-			if (!issue) {
-				console.error("Issue not created", result);
-				return "Issue not created";
-			}
-
-			console.log("Issue created", issue);
-			return `Issue created: ${issue.identifier}`;
 		},
 	});
