@@ -18,6 +18,7 @@ import { createListIssueLabelsTool } from "./list-labels";
 import { createGetIssueTool } from "./get-issue";
 import { createListIssueStatusesTool } from "./list-issue-statuses";
 import { createGetUserTool } from "./get-user";
+import { systemPrompt } from "./system-prompt";
 
 const createTools = (linear: LinearClient) => ({
 	listUsers: createListUsersTool(linear),
@@ -55,6 +56,7 @@ export async function runLinearAI(
 		prompt: "prompt" in options ? options.prompt : undefined,
 		messages: "messages" in options ? options.messages : undefined,
 		maxSteps: 10,
+		system: systemPrompt,
 	});
 
 	return result;
@@ -84,5 +86,6 @@ export async function runLinearAIStream(
 		messages: "messages" in options ? options.messages : undefined,
 		prompt: "prompt" in options ? options.prompt : undefined,
 		maxSteps: 10,
+		system: systemPrompt,
 	});
 }
